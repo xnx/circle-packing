@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+*.pyo
+*.db
+*.swp
+*.swo
+*.swn
+*.swm
+*.swl
+.DS_Store
