@@ -5,16 +5,16 @@ import numpy as np
 import sys
 from scipy.ndimage import distance_transform_edt
 
-def pack_circles(mask, *, radii = None, n : int = None, margin : float = 1.0, radius_range : tuple[int,int] = (0.005, 0.05), greedy : bool = True, return_dists : bool = False):
+def pack_circles(mask, *, radii = None, n : int = None, margin : float = 1.0, radius_range : tuple[float,float] = (0.005, 0.05), greedy : bool = True, return_dists : bool = False):
     """
     Parameters
     ----------
-    mask : array_like[2D, T]
+    mask : array_like[(N,M), int]
         Circles will be packed into non-zero regions of mask of sufficient 
         size. Each circle's value will be taken from the pixel of mask it is
         centered on.
     
-    radii : array_like[1D, float], optional
+    radii : array_like[K, float], optional
         If not None: greedy mode is disabled, n and radius_range are ignored.
         The circles' radii will be set from this in reverse sorted order 
         (largest first).
@@ -44,12 +44,11 @@ def pack_circles(mask, *, radii = None, n : int = None, margin : float = 1.0, ra
         
     Returns
     -------
-    circles : list[tuple[int, int, float, T]]
-        y, x, radius, mask[y,x] for each placed circle
-    dists : array_like[2D, float]
-        A copy of mask populated with the distance to the closest 
-        circle. Pixels within circles will have negative distance.
-
+    circles : list[tuple[int, int, float, int]]
+        (y, x, radius, mask[y,x]) for each placed circle
+    dists : array_like[(N,M), float]
+        A copy of mask with the distance to the closest circle in each pixel.
+        Pixels within circles will have negative distance.
     """
     mask = np.asarray(mask)
     if len(mask.shape) != 2:
